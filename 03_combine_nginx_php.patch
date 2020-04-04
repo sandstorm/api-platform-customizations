@@ -1,0 +1,88 @@
+diff -ur 02_api_subdirectory/api/Dockerfile 03_combine_nginx_php/api/Dockerfile
+--- 02_api_subdirectory/api/Dockerfile	2020-04-04 15:19:36.000000000 +0200
++++ 03_combine_nginx_php/api/Dockerfile	2020-04-04 15:22:20.000000000 +0200
+@@ -5,7 +5,6 @@
+ 
+ # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
+ ARG PHP_VERSION=7.4
+-ARG NGINX_VERSION=1.17
+ ARG VARNISH_VERSION=6.3
+ 
+ 
+@@ -19,6 +18,7 @@
+ 		file \
+ 		gettext \
+ 		git \
++		nginx \
+ 	;
+ 
+ ARG APCU_VERSION=5.1.18
+@@ -119,15 +119,9 @@
+ CMD ["php-fpm"]
+ 
+ 
+-# "nginx" stage
+-# depends on the "php" stage above
+-FROM nginx:${NGINX_VERSION}-alpine AS api_platform_nginx
+-
++# nginx in PHP container
+ COPY docker/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+-
+-WORKDIR /srv/api/public
+-
+-COPY --from=api_platform_php /srv/api/public ./
++RUN mkdir /run/nginx
+ 
+ 
+ # "varnish" stage
+diff -ur 02_api_subdirectory/api/docker/nginx/conf.d/default.conf 03_combine_nginx_php/api/docker/nginx/conf.d/default.conf
+--- 02_api_subdirectory/api/docker/nginx/conf.d/default.conf	2020-04-04 15:19:36.000000000 +0200
++++ 03_combine_nginx_php/api/docker/nginx/conf.d/default.conf	2020-04-04 15:22:29.000000000 +0200
+@@ -8,7 +8,7 @@
+ 
+     location ~ ^/index\.php(/|$) {
+         # Comment the next line and uncomment the next to enable dynamic resolution (incompatible with Kubernetes)
+-        fastcgi_pass php:9000;
++        fastcgi_pass 127.0.0.1:9000;
+         #resolver 127.0.0.11;
+         #set $upstream_host php;
+         #fastcgi_pass $upstream_host:9000;
+diff -ur 02_api_subdirectory/api/docker/php/docker-entrypoint.sh 03_combine_nginx_php/api/docker/php/docker-entrypoint.sh
+--- 02_api_subdirectory/api/docker/php/docker-entrypoint.sh	2020-04-04 15:19:36.000000000 +0200
++++ 03_combine_nginx_php/api/docker/php/docker-entrypoint.sh	2020-04-04 15:22:44.000000000 +0200
+@@ -31,4 +31,5 @@
+ 	fi
+ fi
+ 
++nginx &
+ exec docker-php-entrypoint "$@"
+diff -ur 02_api_subdirectory/docker-compose.yml 03_combine_nginx_php/docker-compose.yml
+--- 02_api_subdirectory/docker-compose.yml	2020-04-04 15:19:36.000000000 +0200
++++ 03_combine_nginx_php/docker-compose.yml	2020-04-04 15:22:58.000000000 +0200
+@@ -7,7 +7,7 @@
+       - ${PHP_IMAGE:-quay.io/api-platform/php}
+ 
+ services:
+-  php:
++  api:
+     build:
+       context: ./api
+       target: api_platform_php
+@@ -26,17 +26,6 @@
+       # if you develop on Linux, you may use a bind-mounted host directory instead
+       # - ./api/var:/srv/api/var:rw
+ 
+-  api:
+-    build:
+-      context: ./api
+-      target: api_platform_nginx
+-      <<: *api-cache-from
+-    image: ${NGINX_IMAGE:-quay.io/api-platform/nginx}
+-    depends_on:
+-      - php
+-    volumes:
+-      - ./api/public:/srv/api/public:ro
+-
+   vulcain:
+     image: dunglas/vulcain
+     environment:
