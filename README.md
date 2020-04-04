@@ -46,10 +46,9 @@ git commit -m "TASK: apply 04_disable_vulcain_mercure_varnish.patch"
 
 ## Add Production config
 
-docker build --target api_platform_php -t scheduleplanning-api api/
-docker build --target api_platform_admin_nginx -t scheduleplanning-admin admin/
-docker build --target api_platform_client_nginx -t scheduleplanning-client client/
-docker build -t scheduleplanning docker/prod
+curl -L https://github.com/sandstorm/api-platform-customizations/raw/master/05_add_prod_build.patch | patch -p1
+git add .
+git commit -m "TASK: apply 05_add_prod_build.patch"
 
 ## Development
 
