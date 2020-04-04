@@ -1,0 +1,5 @@
+api_platform:
+    resource: .
+    type: api_platform
+    # in our non-standard setup, we make all API routes available underneath "/api".
+    prefix: /api

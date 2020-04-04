@@ -21,13 +21,13 @@ diff -urN 05_add_prod_build/api/.env 06_add_mercure_hub_to_php_container/api/.en
  ###< symfony/mercure-bundle ###
 diff -urN 05_add_prod_build/api/Dockerfile 06_add_mercure_hub_to_php_container/api/Dockerfile
 --- 05_add_prod_build/api/Dockerfile	2020-04-04 15:39:57.000000000 +0200
-+++ 06_add_mercure_hub_to_php_container/api/Dockerfile	2020-04-04 16:11:45.000000000 +0200
++++ 06_add_mercure_hub_to_php_container/api/Dockerfile	2020-04-04 16:37:33.000000000 +0200
 @@ -123,6 +123,8 @@
  COPY docker/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
  RUN mkdir /run/nginx
  
 +# mercure in PHP container
-++COPY --from=dunglas/mercure /mercure /mercure
++COPY --from=dunglas/mercure /mercure /mercure
  
  # "varnish" stage
  # does not depend on any of the above stages, but placed here to keep everything in one Dockerfile

@@ -126,6 +126,9 @@ RUN mkdir /run/nginx
 # mercure in PHP container
 COPY --from=dunglas/mercure /mercure /mercure
 
+# vulcain in PHP container
+COPY --from=dunglas/vulcain /vulcain /vulcain
+
 # "varnish" stage
 # does not depend on any of the above stages, but placed here to keep everything in one Dockerfile
 FROM varnish:${VARNISH_VERSION} AS api_platform_varnish

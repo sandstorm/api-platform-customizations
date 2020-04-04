@@ -1,0 +1,16 @@
+stages:
+  - package
+  - deploy
+
+package_app:
+  stage: package
+  image: docker-hub.sandstorm.de/docker-infrastructure/php-app/build:7.3-v1
+  only:
+    - master
+  tags:
+    - docker
+    - privileged
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - bash ./build_prod.sh $CI_REGISTRY_IMAGE:$CI_BUILD_REF_SLUG
+    - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_REF_SLUG
