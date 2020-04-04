@@ -1,0 +1,82 @@
+diff -urN 04_disable_vulcain_mercure_varnish/.gitlab-ci.yml 05_add_prod_build/.gitlab-ci.yml
+--- 04_disable_vulcain_mercure_varnish/.gitlab-ci.yml	1970-01-01 01:00:00.000000000 +0100
++++ 05_add_prod_build/.gitlab-ci.yml	2020-04-04 15:56:37.000000000 +0200
+@@ -0,0 +1,16 @@
++stages:
++  - package
++  - deploy
++
++package_app:
++  stage: package
++  image: docker-hub.sandstorm.de/docker-infrastructure/php-app/build:7.3-v1
++  only:
++    - master
++  tags:
++    - docker
++    - privileged
++  script:
++    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
++    - bash ./build-prod.sh $CI_REGISTRY_IMAGE:$CI_BUILD_REF_SLUG
++    - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_REF_SLUG
+\ No newline at end of file
+diff -urN 04_disable_vulcain_mercure_varnish/admin/package.json 05_add_prod_build/admin/package.json
+--- 04_disable_vulcain_mercure_varnish/admin/package.json	2020-04-04 15:51:17.000000000 +0200
++++ 05_add_prod_build/admin/package.json	2020-04-04 15:51:27.000000000 +0200
+@@ -1,5 +1,6 @@
+ {
+   "name": "admin",
++  "homepage": ".",
+   "version": "0.1.0",
+   "private": true,
+   "dependencies": {
+diff -urN 04_disable_vulcain_mercure_varnish/admin/src/App.js 05_add_prod_build/admin/src/App.js
+--- 04_disable_vulcain_mercure_varnish/admin/src/App.js	2020-04-04 15:50:03.000000000 +0200
++++ 05_add_prod_build/admin/src/App.js	2020-04-04 15:50:40.000000000 +0200
+@@ -1,4 +1,5 @@
+ import React from 'react';
+ import { HydraAdmin } from '@api-platform/admin';
+ 
+-export default () => <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT}/>;
++// NOTE: the "/api" endpoint is not allowed to end with a slash for proper functioning
++export default () => <HydraAdmin entrypoint={process.env.REACT_APP_API_ENTRYPOINT || window.location.origin + '/api'}/>;
+diff -urN 04_disable_vulcain_mercure_varnish/build_prod.sh 05_add_prod_build/build_prod.sh
+--- 04_disable_vulcain_mercure_varnish/build_prod.sh	1970-01-01 01:00:00.000000000 +0100
++++ 05_add_prod_build/build_prod.sh	2020-04-04 15:48:32.000000000 +0200
+@@ -0,0 +1,8 @@
++
++echo "Will build image with tag $1"
++
++docker build --target api_platform_php -t api api/
++docker build --build-arg REACT_APP_API_ENTRYPOINT= --target api_platform_admin_nginx -t admin admin/
++docker build --build-arg REACT_APP_API_ENTRYPOINT= --target api_platform_client_nginx -t client client/
++
++docker build -t $1 docker/prod
+\ No newline at end of file
+diff -urN 04_disable_vulcain_mercure_varnish/client/package.json 05_add_prod_build/client/package.json
+--- 04_disable_vulcain_mercure_varnish/client/package.json	2020-04-04 15:52:02.000000000 +0200
++++ 05_add_prod_build/client/package.json	2020-04-04 15:52:13.000000000 +0200
+@@ -1,5 +1,6 @@
+ {
+   "name": "client",
++  "homepage": ".",
+   "version": "0.1.0",
+   "private": true,
+   "dependencies": {
+diff -urN 04_disable_vulcain_mercure_varnish/client/src/config/entrypoint.js 05_add_prod_build/client/src/config/entrypoint.js
+--- 04_disable_vulcain_mercure_varnish/client/src/config/entrypoint.js	2020-04-04 15:53:10.000000000 +0200
++++ 05_add_prod_build/client/src/config/entrypoint.js	2020-04-04 15:53:47.000000000 +0200
+@@ -1 +1,2 @@
+-export const ENTRYPOINT = process.env.REACT_APP_API_ENTRYPOINT;
++// NOTE: this entrypoint URL MUST end with /
++export const ENTRYPOINT = process.env.REACT_APP_API_ENTRYPOINT || window.location.origin + "/api/";
+diff -urN 04_disable_vulcain_mercure_varnish/docker/prod/Dockerfile 05_add_prod_build/docker/prod/Dockerfile
+--- 04_disable_vulcain_mercure_varnish/docker/prod/Dockerfile	1970-01-01 01:00:00.000000000 +0100
++++ 05_add_prod_build/docker/prod/Dockerfile	2020-04-04 15:44:43.000000000 +0200
+@@ -0,0 +1,7 @@
++FROM api
++
++COPY --from=admin /usr/src/admin/build /srv/api/public/admin
++COPY --from=client /usr/src/client/build /srv/api/public/client
++
++ENV APP_ENV=prod
++ENV SHELL_VERBOSITY=3

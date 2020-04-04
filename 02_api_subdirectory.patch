@@ -1,4 +1,4 @@
-diff -ur 01_fix_docker_container_restart/admin/.env 02_api_subdirectory/admin/.env
+diff -urN 01_fix_docker_container_restart/admin/.env 02_api_subdirectory/admin/.env
 --- 01_fix_docker_container_restart/admin/.env	2020-04-04 15:13:10.000000000 +0200
 +++ 02_api_subdirectory/admin/.env	2020-04-04 15:20:45.000000000 +0200
 @@ -1 +1,2 @@
@@ -6,7 +6,7 @@ diff -ur 01_fix_docker_container_restart/admin/.env 02_api_subdirectory/admin/.e
 +# NOTE: for the ADMIN component to work, the URL is NOT allowed to end with a slash
 +REACT_APP_API_ENTRYPOINT=https://localhost:8443/api
 \ No newline at end of file
-diff -ur 01_fix_docker_container_restart/api/config/routes/api_platform.yaml 02_api_subdirectory/api/config/routes/api_platform.yaml
+diff -urN 01_fix_docker_container_restart/api/config/routes/api_platform.yaml 02_api_subdirectory/api/config/routes/api_platform.yaml
 --- 01_fix_docker_container_restart/api/config/routes/api_platform.yaml	2020-04-04 15:13:11.000000000 +0200
 +++ 02_api_subdirectory/api/config/routes/api_platform.yaml	2020-04-04 15:20:33.000000000 +0200
 @@ -1,3 +1,5 @@
@@ -16,7 +16,7 @@ diff -ur 01_fix_docker_container_restart/api/config/routes/api_platform.yaml 02_
 +    # in our non-standard setup, we make all API routes available underneath "/api".
 +    prefix: /api
 \ No newline at end of file
-diff -ur 01_fix_docker_container_restart/client/.env 02_api_subdirectory/client/.env
+diff -urN 01_fix_docker_container_restart/client/.env 02_api_subdirectory/client/.env
 --- 01_fix_docker_container_restart/client/.env	2020-04-04 15:13:11.000000000 +0200
 +++ 02_api_subdirectory/client/.env	2020-04-04 15:20:56.000000000 +0200
 @@ -1 +1,2 @@

@@ -1,4 +1,4 @@
-diff -ur 03_combine_nginx_php/api/config/packages/api_platform.yaml 04_disable_vulcain_mercure_varnish/api/config/packages/api_platform.yaml
+diff -urN 03_combine_nginx_php/api/config/packages/api_platform.yaml 04_disable_vulcain_mercure_varnish/api/config/packages/api_platform.yaml
 --- 03_combine_nginx_php/api/config/packages/api_platform.yaml	2020-04-04 15:27:45.000000000 +0200
 +++ 04_disable_vulcain_mercure_varnish/api/config/packages/api_platform.yaml	2020-04-04 15:27:55.000000000 +0200
 @@ -7,6 +7,3 @@
@@ -8,8 +8,21 @@ diff -ur 03_combine_nginx_php/api/config/packages/api_platform.yaml 04_disable_v
 -    # Mercure integration, remove if unwanted
 -    mercure:
 -        hub_url: '%env(MERCURE_SUBSCRIBE_URL)%'
-Only in 03_combine_nginx_php/api/config/packages: prod
-diff -ur 03_combine_nginx_php/docker/dev-tls/Dockerfile 04_disable_vulcain_mercure_varnish/docker/dev-tls/Dockerfile
+diff -urN 03_combine_nginx_php/api/config/packages/prod/api_platform.yaml 04_disable_vulcain_mercure_varnish/api/config/packages/prod/api_platform.yaml
+--- 03_combine_nginx_php/api/config/packages/prod/api_platform.yaml	2020-04-04 15:28:32.000000000 +0200
++++ 04_disable_vulcain_mercure_varnish/api/config/packages/prod/api_platform.yaml	1970-01-01 01:00:00.000000000 +0100
+@@ -1,10 +0,0 @@
+-api_platform:
+-    # Varnish integration, remove if unwanted
+-    http_cache:
+-        invalidation:
+-            enabled: true
+-            varnish_urls: ['%env(VARNISH_URL)%']
+-        max_age: 0
+-        shared_max_age: 3600
+-        vary: ['Content-Type', 'Authorization', 'Origin']
+-        public: true
+diff -urN 03_combine_nginx_php/docker/dev-tls/Dockerfile 04_disable_vulcain_mercure_varnish/docker/dev-tls/Dockerfile
 --- 03_combine_nginx_php/docker/dev-tls/Dockerfile	2020-04-04 15:21:24.000000000 +0200
 +++ 04_disable_vulcain_mercure_varnish/docker/dev-tls/Dockerfile	2020-04-04 15:25:58.000000000 +0200
 @@ -30,4 +30,17 @@
@@ -30,7 +43,7 @@ diff -ur 03_combine_nginx_php/docker/dev-tls/Dockerfile 04_disable_vulcain_mercu
 +		echo '        proxy_set_header X-Forwarded-Proto $scheme;'; \
 +		echo '    }'; \
  	} | tee /etc/nginx/conf.d/default.conf
-diff -ur 03_combine_nginx_php/docker-compose.yml 04_disable_vulcain_mercure_varnish/docker-compose.yml
+diff -urN 03_combine_nginx_php/docker-compose.yml 04_disable_vulcain_mercure_varnish/docker-compose.yml
 --- 03_combine_nginx_php/docker-compose.yml	2020-04-04 15:22:58.000000000 +0200
 +++ 04_disable_vulcain_mercure_varnish/docker-compose.yml	2020-04-04 15:25:14.000000000 +0200
 @@ -26,22 +26,6 @@

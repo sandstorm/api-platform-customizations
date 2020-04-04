@@ -46,6 +46,11 @@ git commit -m "TASK: apply 04_disable_vulcain_mercure_varnish.patch"
 
 ## Add Production config
 
+docker build --target api_platform_php -t scheduleplanning-api api/
+docker build --target api_platform_admin_nginx -t scheduleplanning-admin admin/
+docker build --target api_platform_client_nginx -t scheduleplanning-client client/
+docker build -t scheduleplanning docker/prod
+
 ## Development
 
 ```

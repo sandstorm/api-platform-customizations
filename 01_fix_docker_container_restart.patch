@@ -1,4 +1,4 @@
-diff -ur 00_base/docker-compose.yml 01_fix_docker_container_restart/docker-compose.yml
+diff -urN 00_base/docker-compose.yml 01_fix_docker_container_restart/docker-compose.yml
 --- 00_base/docker-compose.yml	2020-04-04 15:09:44.000000000 +0200
 +++ 01_fix_docker_container_restart/docker-compose.yml	2020-04-04 15:13:43.000000000 +0200
 @@ -101,7 +101,7 @@
