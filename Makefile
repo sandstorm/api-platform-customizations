@@ -1,5 +1,4 @@
 gen-patches:
-	cd patch-gen; diff -urN 00* 01* > ../01_fix_docker_container_restart.patch ||:
 	cd patch-gen; diff -urN 01* 02* > ../02_api_subdirectory.patch ||:
 	cd patch-gen; diff -urN 02* 03* > ../03_combine_nginx_php.patch ||:
 	cd patch-gen; diff -urN 03* 04* > ../04_disable_vulcain_mercure_varnish.patch ||:

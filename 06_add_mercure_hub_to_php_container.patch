@@ -20,9 +20,9 @@ diff -urN 05_add_prod_build/api/.env 06_add_mercure_hub_to_php_container/api/.en
  MERCURE_JWT_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZXJjdXJlIjp7InB1Ymxpc2giOltdfX0.Oo0yg7y4yMa1vr_bziltxuTCqb8JVHKxp-f_FwwOim0
  ###< symfony/mercure-bundle ###
 diff -urN 05_add_prod_build/api/Dockerfile 06_add_mercure_hub_to_php_container/api/Dockerfile
---- 05_add_prod_build/api/Dockerfile	2020-04-04 15:39:57.000000000 +0200
-+++ 06_add_mercure_hub_to_php_container/api/Dockerfile	2020-04-04 16:37:33.000000000 +0200
-@@ -123,6 +123,8 @@
+--- 05_add_prod_build/api/Dockerfile	2020-05-04 15:00:23.000000000 +0200
++++ 06_add_mercure_hub_to_php_container/api/Dockerfile	2020-05-04 15:00:45.000000000 +0200
+@@ -120,6 +120,8 @@
  COPY docker/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
  RUN mkdir /run/nginx
  

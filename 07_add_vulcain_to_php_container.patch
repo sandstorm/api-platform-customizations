@@ -1,7 +1,7 @@
 diff -urN 06_add_mercure_hub_to_php_container/api/Dockerfile 07_add_vulcain_to_php_container/api/Dockerfile
---- 06_add_mercure_hub_to_php_container/api/Dockerfile	2020-04-04 16:37:33.000000000 +0200
-+++ 07_add_vulcain_to_php_container/api/Dockerfile	2020-04-04 16:37:42.000000000 +0200
-@@ -126,6 +126,9 @@
+--- 06_add_mercure_hub_to_php_container/api/Dockerfile	2020-05-04 15:00:45.000000000 +0200
++++ 07_add_vulcain_to_php_container/api/Dockerfile	2020-05-04 15:00:52.000000000 +0200
+@@ -123,6 +123,9 @@
  # mercure in PHP container
  COPY --from=dunglas/mercure /mercure /mercure
  
