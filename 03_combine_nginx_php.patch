@@ -40,17 +40,31 @@ diff -urN 02_api_subdirectory/api/Dockerfile 03_combine_nginx_php/api/Dockerfile
  
  # "varnish" stage
 diff -urN 02_api_subdirectory/api/docker/nginx/conf.d/default.conf 03_combine_nginx_php/api/docker/nginx/conf.d/default.conf
---- 02_api_subdirectory/api/docker/nginx/conf.d/default.conf	2020-04-04 15:19:36.000000000 +0200
-+++ 03_combine_nginx_php/api/docker/nginx/conf.d/default.conf	2020-04-04 15:22:29.000000000 +0200
-@@ -8,7 +8,7 @@
+--- 02_api_subdirectory/api/docker/nginx/conf.d/default.conf	2020-05-04 15:03:19.000000000 +0200
++++ 03_combine_nginx_php/api/docker/nginx/conf.d/default.conf	2020-05-04 15:04:03.000000000 +0200
+@@ -7,9 +7,7 @@
+     }
  
      location ~ ^/index\.php(/|$) {
-         # Comment the next line and uncomment the next to enable dynamic resolution (incompatible with Kubernetes)
--        fastcgi_pass php:9000;
+-        set_by_lua $upstream_host 'return os.getenv("UPSTREAM") or "php:9000"';
+-        fastcgi_pass $upstream_host;
+-        resolver local=on;
 +        fastcgi_pass 127.0.0.1:9000;
-         #resolver 127.0.0.11;
-         #set $upstream_host php;
-         #fastcgi_pass $upstream_host:9000;
+ 
+         # Increase the buffer size to handle large cache invalidation headers
+         fastcgi_buffer_size 32k;
+@@ -38,11 +36,4 @@
+     location ~ \.php$ {
+       return 404;
+     }
+-
+-    # URL for health checks
+-    location /nginx-health {
+-      access_log off;
+-      default_type text/plain;
+-      return 200 "healthy\n";
+-    }
+ }
 diff -urN 02_api_subdirectory/api/docker/php/docker-entrypoint.sh 03_combine_nginx_php/api/docker/php/docker-entrypoint.sh
 --- 02_api_subdirectory/api/docker/php/docker-entrypoint.sh	2020-04-04 15:19:36.000000000 +0200
 +++ 03_combine_nginx_php/api/docker/php/docker-entrypoint.sh	2020-04-04 15:22:44.000000000 +0200

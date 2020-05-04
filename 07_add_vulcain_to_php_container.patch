@@ -12,8 +12,8 @@ diff -urN 06_add_mercure_hub_to_php_container/api/Dockerfile 07_add_vulcain_to_p
  # does not depend on any of the above stages, but placed here to keep everything in one Dockerfile
  FROM varnish:${VARNISH_VERSION} AS api_platform_varnish
 diff -urN 06_add_mercure_hub_to_php_container/api/docker/nginx/conf.d/default.conf 07_add_vulcain_to_php_container/api/docker/nginx/conf.d/default.conf
---- 06_add_mercure_hub_to_php_container/api/docker/nginx/conf.d/default.conf	2020-04-04 16:13:01.000000000 +0200
-+++ 07_add_vulcain_to_php_container/api/docker/nginx/conf.d/default.conf	2020-04-04 16:36:52.000000000 +0200
+--- 06_add_mercure_hub_to_php_container/api/docker/nginx/conf.d/default.conf	2020-05-04 15:04:34.000000000 +0200
++++ 07_add_vulcain_to_php_container/api/docker/nginx/conf.d/default.conf	2020-05-04 15:04:57.000000000 +0200
 @@ -1,4 +1,5 @@
  server {
 +    listen 81;

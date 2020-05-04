@@ -32,9 +32,9 @@ diff -urN 05_add_prod_build/api/Dockerfile 06_add_mercure_hub_to_php_container/a
  # "varnish" stage
  # does not depend on any of the above stages, but placed here to keep everything in one Dockerfile
 diff -urN 05_add_prod_build/api/docker/nginx/conf.d/default.conf 06_add_mercure_hub_to_php_container/api/docker/nginx/conf.d/default.conf
---- 05_add_prod_build/api/docker/nginx/conf.d/default.conf	2020-04-04 15:39:57.000000000 +0200
-+++ 06_add_mercure_hub_to_php_container/api/docker/nginx/conf.d/default.conf	2020-04-04 16:13:01.000000000 +0200
-@@ -40,4 +40,17 @@
+--- 05_add_prod_build/api/docker/nginx/conf.d/default.conf	2020-05-04 15:04:28.000000000 +0200
++++ 06_add_mercure_hub_to_php_container/api/docker/nginx/conf.d/default.conf	2020-05-04 15:04:34.000000000 +0200
+@@ -36,4 +36,17 @@
      location ~ \.php$ {
        return 404;
      }
